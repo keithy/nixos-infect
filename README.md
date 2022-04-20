@@ -38,7 +38,7 @@ and most importantly, simply didn't work for me!
 0) **Read and understand the [the script](./nixos-infect)**
 1) Deploy any custom configuration you want on your host
 2) Deploy your host as non-Nix Operating System.
-3) Deploy an SSH key for the root user.
+3) Deploy an SSH key for the **root** user.
 
 > *NB:* This step is important.
 > The root user will not have a password when nixos-infect runs to completion.
@@ -192,8 +192,8 @@ Tested for both VM.Standard.E2.1.Micro (x86) and VM.Standard.A1.Flex (AArch64) i
 |Oracle Linux| 7.9[1]          |**success**|2022-04-19| free amd |
 
     [1] The Oracle 7.9 layout has 200Mb for /boot 8G for swap
-    PR#100 Adopted 8G Swap device
-    
+    PR#100 Adopts the 8G Swap device
+
 ### Aliyun ECS
 
 Aliyun ECS tested on ecs.s6-c1m2.large, region **cn-shanghai**, needs a little bit tweaks:
