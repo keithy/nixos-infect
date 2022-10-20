@@ -60,6 +60,7 @@ EOF
 {
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
 $bootcfg
+  boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "xen_blkfront" ];
   boot.initrd.kernelModules = [ "nvme" ];
   fileSystems."/" = { device = "$rootfsdev"; fsType = "$rootfstype"; };
   $swapcfg
@@ -283,7 +284,7 @@ infect() {
   # shellcheck disable=SC1090
   source ~/.nix-profile/etc/profile.d/nix.sh
 
-  [[ -z "$NIX_CHANNEL" ]] && NIX_CHANNEL="nixos-21.11"
+  [[ -z "$NIX_CHANNEL" ]] && NIX_CHANNEL="nixos-22.05"
   nix-channel --remove nixpkgs
   nix-channel --add "https://nixos.org/channels/$NIX_CHANNEL" nixos
   nix-channel --update
@@ -308,6 +309,7 @@ infect() {
   echo etc/nixos                  >> /etc/NIXOS_LUSTRATE
   echo etc/resolv.conf            >> /etc/NIXOS_LUSTRATE
   echo root/.nix-defexpr/channels >> /etc/NIXOS_LUSTRATE
+  (cd / && ls etc/ssh/ssh_host_*_key* || true) >> /etc/NIXOS_LUSTRATE
 
   rm -rf /boot.bak
   isEFI && umount "$esp"

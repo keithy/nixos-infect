@@ -16,6 +16,7 @@ This script has successfully been tested on at least the follow hosting provider
 * [OVHcloud](https://www.ovh.com/)
 * [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/)
 * [GalaxyGate](https://galaxygate.net)
+* [Cockbox](https://cockbox.org)
 
 Should you find that it works on your hoster,
 feel free to update this README and issue a pull request.
@@ -46,7 +47,7 @@ and most importantly, simply didn't work for me!
 
 4) run the script with:
 ```
-  curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | NIX_CHANNEL=nixos-21.11 bash -x
+  curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | NIX_CHANNEL=nixos-22.05 bash -x
 ```
 
 *NB*: This script wipes out the targeted host's root filesystem when it runs to completion.
@@ -63,7 +64,7 @@ and supply to it the following example yaml stanzas:
 #cloud-config
 
 runcmd:
-  - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=digitalocean NIX_CHANNEL=nixos-21.11 bash 2>&1 | tee /tmp/infect.log
+  - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=digitalocean NIX_CHANNEL=nixos-22.05 bash 2>&1 | tee /tmp/infect.log
 ```
 
 #### Potential tweaks:
@@ -81,7 +82,7 @@ write_files:
       environment.systemPackages = with pkgs; [ vim ];
     }
 runcmd:
-  - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=digitalocean NIXOS_IMPORT=./host.nix NIX_CHANNEL=nixos-21.11 bash 2>&1 | tee /tmp/infect.log
+  - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=digitalocean NIXOS_IMPORT=./host.nix NIX_CHANNEL=nixos-22.05 bash 2>&1 | tee /tmp/infect.log
 ```
 
 
@@ -113,20 +114,21 @@ runcmd:
 ### Vultr
 
 To set up a NixOS Vultr server,
-instantiate an Ubuntu box with the following "Startup Script":
+instantiate an Ubuntu box with the following "Cloud-Init User-Data":
 
 ```bash
 #!/bin/sh
 
-curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | NIX_CHANNEL=nixos-21.11 bash
+curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | NIX_CHANNEL=nixos-22.05 bash
 ```
 
 Allow for a few minutes over the usual Ubuntu deployment time for NixOS to download & install itself.
 
 #### Tested on
-|Distribution|       Name      | Status    | test date|   Slug           |   ID    |
-|------------|-----------------|-----------|----------|------------------|---------|
-| Ubuntu     | 18.10 x64       |**success**|(Unknown) | (Unknown)        |(Unknown)|
+|Distribution|       Name      | Status    | test date|
+|------------|-----------------|-----------|----------|
+| Ubuntu     | 18.10 x64       |**success**|(Unknown) |
+| Ubuntu     | 22.04 x64       |**success**|2022-07-04|
 
 
 ### Hetzner cloud
@@ -137,14 +139,15 @@ When creating a server provide the following script as "User data":
 ```
 #!/bin/sh
 
-curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | NIX_CHANNEL=nixos-21.11 bash 2>&1 | tee /tmp/infect.log
+curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | NIX_CHANNEL=nixos-22.05 bash 2>&1 | tee /tmp/infect.log
 ```
 
 #### Tested on
 |Distribution|       Name      | Status    | test date|
 |------------|-----------------|-----------|----------|
-|Debian      | 11              |**success**|2021-11-26|
-|Ubuntu      | 20.04 x64       |**success**|(Unknown) |
+| Debian     | 11              |**success**|2021-11-26|
+| Ubuntu     | 20.04 x64       |**success**|(Unknown) |
+| Ubuntu     | 22.04 x64       |**success**|2022-06-29|
 
 ### InterServer VPS
 #### Tested on
@@ -178,6 +181,7 @@ Before executing the install script, you may need to check your mounts with `df 
 |Arch Linux  | Arch Linux x86-64 |**success**|2021-03-25|
 |Debian      | 10                |**success**|2021-04-29|
 |Debian      | 11                |**success**|2021-11-17|
+|Ubuntu      | 22.04             |**success**|2022-06-19|
 
 ### Oracle Cloud Infrastructure
 Tested for both VM.Standard.E2.1.Micro (x86) and VM.Standard.A1.Flex (AArch64) instances.
@@ -192,7 +196,7 @@ Tested for both VM.Standard.E2.1.Micro (x86) and VM.Standard.A1.Flex (AArch64) i
 |Oracle Linux| 7.9[1]          |**success**|2022-04-19| free amd |
 
     [1] The Oracle 7.9 layout has 200Mb for /boot 8G for swap
-    PR#100 Adopts the 8G Swap device
+    PR#100 Adopted 8G Swap device
 
 ### Aliyun ECS
 
@@ -211,3 +215,11 @@ Aliyun ECS tested on ecs.s6-c1m2.large, region **cn-shanghai**, needs a little b
 |Distribution|       Name      | Status    | test date|
 |------------|-----------------|-----------|----------|
 |Ubuntu      | 20.04           |**success**|2022-04-02|
+
+
+### Cockbox
+Requred some Xen modules to work out, after that NixOS erected itself without a hinch.
+#### Tested on
+|Distribution|       Name      | Status    | test date|
+|------------|-----------------|-----------|----------|
+|Ubuntu      | 20.04           |**success**|2022-06-12|
